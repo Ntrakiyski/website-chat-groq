@@ -121,6 +121,35 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground flex items-center justify-center min-h-screen; /* Added flexbox for centering */
   }
+}
+
+.mobile-shell {
+  position: relative;
+  width: 390px; /* iPhone 12 Pro width */
+  height: 844px; /* iPhone 12 Pro height */
+  margin: 0 auto; /* Removed top margin, now centered by flexbox */
+  border: 16px solid black;
+  border-radius: 36px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  background: #F7F7F7; /* Changed to light gray as requested */
+}
+
+.mobile-shell-content {
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  background: transparent; /* Changed to transparent to eliminate white card */
+}
+
+/* For Webkit browsers like Chrome, Safari */
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* For Firefox (optional, as it's less obtrusive) */
+body {
+  scrollbar-width: none;
 }

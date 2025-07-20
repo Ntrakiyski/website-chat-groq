@@ -11,17 +11,17 @@ export function useScrollToBottom(): [
     const container = containerRef.current;
     const end = endRef.current;
 
-    if (container && end) {
-      const observer = new MutationObserver(() => {
-        end.scrollIntoView({ behavior: 'instant', block: 'end' });
-      });
+      if (container && end) {
+        const observer = new MutationObserver(() => {
+          end.scrollIntoView({ behavior: 'smooth', block: 'end' }); // Changed instant to smooth
+        });
 
-      observer.observe(container, {
-        childList: true,
-        subtree: true,
-        attributes: true,
-        characterData: true,
-      });
+        observer.observe(container, {
+          childList: true,
+          subtree: true,
+          attributes: true,
+          characterData: true,
+        });
 
       return () => observer.disconnect();
     }
