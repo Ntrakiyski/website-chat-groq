@@ -1,83 +1,51 @@
-<a href="https://ai-sdk-starter-groq.vercel.app">
-  <h1 align="center">Vercel x Groq Chatbot</h1>
-</a>
+# Website chatbot - chat with your data using Groq
 
-<p align="center">
-  An open-source AI chatbot app template built with Next.js, the AI SDK by Vercel, and Groq.
-</p>
+## Description
+This is an open-source AI chatbot application template built with Next.js, the Vercel AI SDK, and Groq. It allows users to provide a data source, like a website or PDF, and then chat with an AI assistant that answers questions based on that content.
 
-<p align="center">
-  <a href="#features"><strong>Features</strong></a> ·
-  <a href="#deploy-your-own"><strong>Deploy Your Own</strong></a> ·
-  <a href="#running-locally"><strong>Running Locally</strong></a> ·
-  <a href="#authors"><strong>Authors</strong></a>
-</p>
-<br/>
-
-## Features
-
-- Streaming text responses powered by the [AI SDK by Vercel](https://sdk.vercel.ai/docs), allowing multiple AI providers to be used interchangeably with just a few lines of code.
-- Built-in tool integration for extending AI capabilities (demonstrated with a weather tool example).
-- Reasoning model support.
-- [shadcn/ui](https://ui.shadcn.com/) components for a modern, responsive UI powered by [Tailwind CSS](https://tailwindcss.com).
-- Built with the latest [Next.js](https://nextjs.org) App Router.
-
-## Deploy Your Own
-
-You can deploy your own version to Vercel by clicking the button below:
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?project-name=Vercel+x+Groq+Chatbot&repository-name=ai-sdk-starter-groq&repository-url=https%3A%2F%2Fgithub.com%2Fvercel-labs%2Fai-sdk-starter-groq&demo-title=Vercel+x+Groq+Chatbot&demo-url=https%3A%2F%2Fai-sdk-starter-groq.labs.vercel.dev%2F&demo-description=A+simple+chatbot+application+built+with+Next.js+that+uses+Groq+via+the+AI+SDK+and+the+Vercel+Marketplace&products=%5B%7B%22type%22%3A%22integration%22%2C%22protocol%22%3A%22ai%22%2C%22productSlug%22%3A%22api-key%22%2C%22integrationSlug%22%3A%22groq%22%7D%5D)
-
-## Running Locally
-
-1. Clone the repository and install dependencies:
-
+## Run Locally
+1. Clone repository:
    ```bash
-   npm install
-   # or
-   yarn install
-   # or
+   git clone https://github.com/ntrakiyski/website-chat-groq.git
+   cd website-chat-groq
+   ```
+2. Install dependencies:
+   ```bash
    pnpm install
    ```
-
-2. Install the [Vercel CLI](https://vercel.com/docs/cli):
-
+3. Run application:
    ```bash
-   npm i -g vercel
-   # or
-   yarn global add vercel
-   # or
-   pnpm install -g vercel
-   ```
-
-   Once installed, link your local project to your Vercel project:
-
-   ```bash
-   vercel link
-   ```
-
-   After linking, pull your environment variables:
-
-   ```bash
-   vercel env pull
-   ```
-
-   This will create a `.env.local` file with all the necessary environment variables.
-
-3. Run the development server:
-
-   ```bash
-   npm run dev
-   # or
-   yarn dev
-   # or
    pnpm dev
    ```
 
-4. Open [http://localhost:3000](http://localhost:3000) to view your new AI chatbot application.
+## Live Demo
+Test the live version: [https://website-chat.worfklow.org](https://website-chat.worfklow.org)
 
-## Authors
+## Tech Stack
+- **Frontend**: Next.js, React, Tailwind CSS, Shadcn/UI, Framer Motion
+- **Backend**: Node.js (Next.js App Router)
+- **Database**: N/A
+- **Tools**: Vercel, Git, pnpm, TypeScript, ESLint
+- **Other**: Vercel AI SDK, Groq, REST API, Firecrawl
 
-This repository is maintained by the [Vercel](https://vercel.com) team and community contributors.
+## Approach & Architecture
+The project is built using a client-server architecture with the Next.js App Router.
 
-Contributions are welcome! Feel free to open issues or submit pull requests to enhance functionality or fix bugs.
+- **Overall architecture**: The frontend is a React-based single-page application responsible for user interaction. The backend consists of serverless API routes hosted by Next.js, which handle data processing and AI interactions.
+
+- **Key components and their interactions**:
+    - **`DataSourceForm`**: The initial UI component where a user can submit a website URL or upload a PDF document.
+    - **API Routes (`app/api/*`)**:
+        - `/api/process-data`: Takes a URL, uses the Firecrawl service to scrape the website's content, and returns it as clean markdown.
+        - `/api/process-pdf`: Receives a PDF file, sends it to an external n8n webhook for text extraction, and returns the processed content.
+        - `/api/chat`: The main AI endpoint. It receives the chat history and the processed context, then uses the Vercel AI SDK and a selected Groq model to generate a conversational response.
+        - `/api/generate-faqs`: Generates a list of Frequently Asked Questions based on the provided context.
+    - **`Chat` Component**: The primary chat interface that displays messages and handles user input. It communicates with the `/api/chat` endpoint to get AI-generated responses.
+    - **Custom Hooks (`lib/hooks/*`)**: React hooks like `useLlmResponse`, `useWelcomeMessage`, and `useSuggestions` are used to manage state and logic for fetching data from the AI backend, creating a clean separation of concerns.
+
+- **Data flow through the system**:
+    1. A user submits a data source (URL/PDF) on the client.
+    2. The client sends this data to the appropriate processing API route (`/api/process-data` or `/api/process-pdf`).
+    3. The API route processes the source and returns the extracted text content (`context`) to the client.
+    4. The client then makes subsequent calls to the `/api/chat` endpoint to summarize the context, generate a welcome message, and create suggested prompts.
+    5. Once initialized, the `Chat` component sends the user's messages along with the processed context to the `/api/chat` endpoint, which returns the AI's response to be displayed in the UI.
